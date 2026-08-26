@@ -9,7 +9,7 @@ mkdir -p "$HOME/.ssh"
 chmod 700 "$HOME/.ssh"
 
 # Configure ssh-agent via systemd user service
-if systemctl --user is-enabled ssh-agent.service &>/dev/null; then
+if systemctl --user is-active ssh-agent.service &>/dev/null; then
   echo "ssh-agent user service is already enabled."
 else
   echo "Enabling and starting ssh-agent.service..."
