@@ -28,11 +28,14 @@ fi
 if command -v gh &>/dev/null; then
   if ! gh auth status &>/dev/null; then
     echo "GitHub CLI not logged in. Starting interactive authentication..."
-    gh auth login --hostname github.com --git-protocol ssh --web
+    gh auth login --hostname github.com --git-protocol ssh --scopes "repo,read:org,admin:public_key,admin:ssh_signing_key" --skip-ssh-key --web
+  elif ! gh auth status 2>&1 | grep -q "admin:public_key"; then
+    echo "Refreshing GitHub CLI permissions for SSH key management..."
+    gh auth refresh -h github.com -s "admin:public_key,admin:ssh_signing_key"
   fi
   
-  SSH_PUB_KEY=$(cat "${SSH_KEY_FILE}.pub")
-  if ! gh ssh-key list 2>/dev/null | grep -q "$SSH_PUB_KEY"; then
+  SSH_PUB_KEY_RAW=$(awk '{print $2}' "${SSH_KEY_FILE}.pub")
+  if ! gh ssh-key list 2>/dev/null | grep -q "$SSH_PUB_KEY_RAW"; then
     echo "Uploading SSH key '$SSH_KEY_TITLE' to GitHub..."
     gh ssh-key add "${SSH_KEY_FILE}.pub" --title "$SSH_KEY_TITLE" --type authentication
   else
