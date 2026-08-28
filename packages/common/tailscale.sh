@@ -1,2 +1,5 @@
 # Tailscale
-omarchy install service tailscale
+if ! command -v tailscale &>/dev/null; then
+  omarchy install service tailscale
+fi
+
