@@ -30,26 +30,7 @@ omarchy-config/
 
 ## Setup on a Fresh Machine
 
-Follow these steps when setting up on a new device.
-
-### 1. Set the Hostname
-Ensure your hostname matches one defined in `set-target.sh` (`laptop-omarchy` or `desktop-omarchy`):
-
-```bash
-hostnamectl set-hostname desktop-omarchy
-```
-
-### 2. Authenticate GitHub CLI & Clone
-Authenticate via the browser using `gh` with the required key-management scopes, then clone the private repository:
-
-```bash
-# Authenticate
-gh auth login --hostname github.com --git-protocol ssh --scopes "repo,read:org,admin:public_key,admin:ssh_signing_key" --skip-ssh-key --web
-
-# Clone repository
-mkdir -p ~/Projects
-gh repo clone w1nn3t0u-o7/omarchy-config ~/Projects/omarchy-config
-```
+TODO with public repo
 
 ### 3. Run the Installer
 
@@ -128,13 +109,3 @@ case "$(hostname)" in
 esac
 ```
 
----
-
-## Pushing Changes Back to GitHub
-
-```bash
-cd ~/Projects/omarchy-config
-git add .
-git commit -m "Update dotfiles and package lists"
-git push
-```
