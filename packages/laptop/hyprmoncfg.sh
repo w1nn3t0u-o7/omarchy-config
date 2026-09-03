@@ -1,9 +1,9 @@
 # hyprmoncfg package
 
-echo "Installing hyprmoncfg..."
 if ! command -v hyprmoncfg &>/dev/null; then
+  log_step "Installing hyprmoncfg..."
   omarchy pkg aur add --noconfirm hyprmoncfg-bin
 else
-  echo "  hyprmonconfig already installed, skipping."
+  log_ok "hyprmoncfg already installed, skipping."
 fi
 

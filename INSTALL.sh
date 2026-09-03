@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/log.sh"
+
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 stow_safe() {
@@ -15,34 +17,33 @@ stow_safe() {
     if [ -e "$target" ] && [ ! -L "$target" ]; then
       mkdir -p "$(dirname "$backup_dir/$rel")"
       mv "$target" "$backup_dir/$rel"
-      echo "WARNING: backed up unexpected real file at $target" >&2
+      log_warn "Backed up unexpected real file at $target"
     fi
   done
 
-  stow -d dotfiles -t "$HOME" -R "$pkg"
+  stow -d dotfiles -t "$HOME" -v -R "$pkg"
 
   find "$HOME/.dotfiles-backup" -maxdepth 1 -type d -mtime +30 -exec rm -rf {} \; 2>/dev/null || true
 }
 
 source ./set-target.sh
-echo "Running install for target: $INSTALL_TARGET"
+log_phase "Running install for target: $INSTALL_TARGET"
 
-echo "Updating Omarchy..."
+log_step "Updating Omarchy..."
 omarchy update
 
 if ! command -v stow &>/dev/null; then
-  echo "Installing stow..."
+  log_step "Installing stow..."
   omarchy pkg add --noconfirm stow
+else
+  log_ok "Stow already installed, skipping."
 fi
 
-echo "Stowing dotfiles..."
+log_phase "Stowing dotfiles..."
 stow_safe common
 [ -d "dotfiles/$INSTALL_TARGET" ] && stow_safe "$INSTALL_TARGET"
 
-echo "Installing packages..."
 source ./packages/add-packages.sh
-
-echo "Applying configs..."
 source ./configs/apply-configs.sh
 
-echo "Done."
+log_ok "Done."

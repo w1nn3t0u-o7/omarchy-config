@@ -2,7 +2,9 @@
 DESIRED_THEME="Catppuccin"
 
 if [ "$(omarchy theme current)" != "$DESIRED_THEME" ]; then
-  echo "Setting theme to $DESIRED_THEME..."
+  log_step "Setting theme to $DESIRED_THEME..."
   omarchy theme set "Catppuccin"
+else
+  log_ok "$DESIRED_THEME already set, skipping."
 fi
 

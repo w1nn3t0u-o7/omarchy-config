@@ -10,9 +10,9 @@ case "$(hostname)" in
     export INSTALL_TARGET="desktop"
     ;;
   *)
-    echo "Unknown hostname: $(hostname). Add it to set-target.sh." >&2
+    log_err "Unknown hostname: $(hostname). Add it to set-target.sh."
     exit 1
     ;;
 esac
 
-echo "Target set to: $INSTALL_TARGET"
+log_ok "Target set to: $INSTALL_TARGET"
