@@ -15,6 +15,9 @@ stow_safe() {
     target="$HOME/$rel"
 
     if [ -e "$target" ] && [ ! -L "$target" ]; then
+      if [ "$(readlink -f -- "$target" 2>/dev/null)" = "$(readlink -f -- "$file" 2>/dev/null)" ]; then
+        continue
+      fi
       mkdir -p "$(dirname "$backup_dir/$rel")"
       mv "$target" "$backup_dir/$rel"
       log_warn "Backed up unexpected real file at $target"
