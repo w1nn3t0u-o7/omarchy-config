@@ -40,14 +40,14 @@ Follow the [official Omarchy installation guide](https://omarchy.org) to get a w
 
 ### 2. Clone This Repo
 
-```
+```bash
 mkdir -p ~/Projects
 git clone https://github.com/w1nn3t0u-o7/omarchy-config.git ~/Projects/omarchy-config
 ```
 
 ### 3. Run the Installer
 
-```
+```bash
 cd ~/Projects/omarchy-config
 chmod +x INSTALL.sh
 ./INSTALL.sh
@@ -70,7 +70,7 @@ Because all installer steps and Stow links are idempotent, you can run updates a
 
 To sync changes pushed from another machine:
 
-```
+```bash
 cd ~/Projects/omarchy-config
 git pull
 ./INSTALL.sh
@@ -82,7 +82,7 @@ git pull
 
 Place the file in `dotfiles/common/` (for all systems) or `dotfiles/<target>/` (for machine-specific settings) matching your home directory structure:
 
-```
+```bash
 # Example: Adding a shared Alacritty config
 mkdir -p ~/Projects/omarchy-config/dotfiles/common/.config/alacritty
 cp ~/.config/alacritty/alacritty.toml ~/Projects/omarchy-config/dotfiles/common/.config/alacritty/
@@ -96,7 +96,7 @@ cd ~/Projects/omarchy-config
 
 Create or edit a `.sh` script under `packages/common/` or `packages/<target>/`:
 
-```
+```bash
 # packages/common/tools.sh
 omarchy pkg add --noconfirm ripgrep fd fzf
 ```
@@ -105,7 +105,7 @@ omarchy pkg add --noconfirm ripgrep fd fzf
 
 If you ever add a third machine, register its hostname in `set-target.sh`:
 
-```
+```bash
 case "$(hostname)" in
   laptop-omarchy)
     export INSTALL_TARGET="laptop"
