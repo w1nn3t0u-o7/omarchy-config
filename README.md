@@ -5,8 +5,6 @@ Automated dotfiles, system packages, and configuration management for Omarchy Li
 
 > **Note:** This is a personal configuration repository, tailored to my own machines, hostnames, and preferences (theme, packages, keybindings). Feel free to fork it and adapt it to your own setup, but running `INSTALL.sh` as-is on your machine will apply my personal choices, not sensible defaults for a stranger.
 
----
-
 ## Architecture Overview
 
 Configurations and package installations are split by host target:
@@ -28,8 +26,6 @@ omarchy-config/
 ├── set-target.sh            # Maps machine hostname to target (laptop / desktop)
 └── INSTALL.sh               # Main idempotent installer
 ```
-
----
 
 ## Prerequisites
 
@@ -66,8 +62,6 @@ chmod +x INSTALL.sh
 - Symlinks common and target-specific dotfiles via `stow` (safely backing up conflicts to `~/.dotfiles-backup/`).
 - Installs all defined packages and runs configuration scripts.
 
----
-
 ## Updating an Existing Machine
 
 Because all installer steps and Stow links are idempotent, you can run updates anytime without fear of breaking active configs.
@@ -81,8 +75,6 @@ cd ~/Projects/omarchy-config
 git pull
 ./INSTALL.sh
 ```
-
----
 
 ## Adding New Configs, Files, or Packages
 
@@ -130,8 +122,6 @@ case "$(hostname)" in
     ;;
 esac
 ```
-
----
 
 ## Credits
 
