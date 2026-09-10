@@ -1,0 +1,7 @@
+{
+  "theme": "omarchy-system",
+  "lastChangelogVersion": "0.85.1",
+  "defaultProvider": "deepseek",
+  "defaultModel": "deepseek-v4-flash",
+  "defaultThinkingLevel": "low"
+}
