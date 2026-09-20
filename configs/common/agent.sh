@@ -30,8 +30,8 @@ if [[ -d "$PI_EXT_DIR" ]]; then
     log_step "Installing npm package: $(basename "$ext_dir")"
     (cd "$ext_dir" && npm install --omit=dev --no-audit --no-fund)
     if grep -q '"playwright-core"' "$pkg"; then
-      log_ok "Downloading Chromium for $(basename "$ext_dir")..."
-      (cd "$ext_dir" && npx playwright install chromium)
+      log_step "Ensuring Chromium is installed for $(basename "$ext_dir")..."
+      (cd "$ext_dir" && ./node_modules/.bin/playwright-core install chromium)
     fi
   done
   log_ok "Installed all the npm packages successfully."
