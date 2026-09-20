@@ -10,19 +10,23 @@ stow_safe() {
   local pkg="$1"
   local backup_dir="$HOME/.dotfiles-backup/$(date +%s)"
 
-  find "dotfiles/$pkg" -type f | while read -r file; do
+  # Only back up real (non-symlink) files that would be shadowed by stow.
+  # Mirror stow's --ignore so we never touch generated dirs like node_modules.
+  while IFS= read -r file; do
     rel="${file#dotfiles/$pkg/}"
     target="$HOME/$rel"
 
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-      if [ "$(readlink -f -- "$target" 2>/dev/null)" = "$(readlink -f -- "$file" 2>/dev/null)" ]; then
-        continue
-      fi
+    # Already a symlink (stow-managed or otherwise) -> let stow handle it.
+    if [ -L "$target" ]; then
+      continue
+    fi
+
+    if [ -e "$target" ]; then
       mkdir -p "$(dirname "$backup_dir/$rel")"
       mv "$target" "$backup_dir/$rel"
       log_warn "Backed up unexpected real file at $target"
     fi
-  done
+  done < <(find "dotfiles/$pkg" \( -name node_modules -o -name .git \) -prune -o -type f -print)
 
   stow -d dotfiles -t "$HOME" --no-folding --ignore='node_modules' -v -R "$pkg"
 
