@@ -17,9 +17,11 @@ fi
 if ! pacman -Qi omarchy-firefox-theme &>/dev/null; then
   log_step "Installing dynamic omarchy theming for Firefox..."
   CLONE_DIR="$(mktemp -d)"
-  git clone https://github.com/vannrr/omarchy-firefox-theme.git "$CLONE_DIR"
-  (cd "$CLONE_DIR" && makepkg -si --noconfirm)
-  rm -rf "$CLONE_DIR"
+  (
+    trap 'rm -rf "$CLONE_DIR"' EXIT
+    git clone https://github.com/vannrr/omarchy-firefox-theme.git "$CLONE_DIR"
+    (cd "$CLONE_DIR" && makepkg -si --noconfirm)
+  )
 else
   log_ok "Dynamic omarchy theming for Firefox already installed, skipping."
 fi

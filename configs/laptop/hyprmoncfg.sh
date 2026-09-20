@@ -7,6 +7,10 @@ else
   omarchy plugin add https://github.com/crmne/omarchy-hyprmoncfg.git --enable
 fi
 
-log_step "Enabling hyprmoncfgd daemon..."
-systemctl --user daemon-reload
-systemctl --user enable --now hyprmoncfgd
+if systemctl --user list-unit-files 2>/dev/null | grep -q '^hyprmoncfgd\.service'; then
+  log_step "Enabling hyprmoncfgd daemon..."
+  systemctl --user daemon-reload
+  systemctl --user enable --now hyprmoncfgd
+else
+  log_warn "hyprmoncfgd.service not found; is the hyprmoncfg plugin installed?"
+fi
