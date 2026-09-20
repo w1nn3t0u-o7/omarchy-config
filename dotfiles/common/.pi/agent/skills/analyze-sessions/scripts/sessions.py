@@ -351,7 +351,7 @@ def add_filter_args(p: argparse.ArgumentParser, *, subagents_default: bool) -> N
                    help="Substring(s) matched against session cwd. Repeatable; any match wins.")
     p.add_argument("--model", action="append", default=[], metavar="SUBSTR",
                    help="Substring(s) matched against model id. Repeatable; any match wins.")
-    p.add_argument("--provider", choices=["anthropic", "openai", "google"],
+    p.add_argument("--provider", choices=["anthropic", "openai", "google", "deepseek"],
                    help="Restrict by provider.")
     p.add_argument("--session", metavar="ID", help="Session id or prefix.")
     sub = p.add_mutually_exclusive_group()

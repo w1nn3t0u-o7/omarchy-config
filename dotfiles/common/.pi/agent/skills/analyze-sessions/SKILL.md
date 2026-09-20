@@ -121,7 +121,7 @@ Available on **all four scripts**:
 | `--since WHEN` / `--until WHEN` | `YYYY-MM-DD`, ISO datetime, or relative: `7d`, `2w`, `3h`, `30m` |
 | `--cwd SUBSTR` | Substring match on the session's real `cwd`. Repeatable. |
 | `--model SUBSTR` | Substring match on model id. Repeatable. |
-| `--provider {anthropic,openai,google}` | |
+| `--provider {anthropic,openai,google,deepseek}` | |
 | `--session ID` | Session id or prefix (8 chars usually unique) |
 | `--include-subagents` / `--no-subagents` | Override the script default |
 | `--limit N` | Cap items returned (caps groups, not sessions, for `cost.py` group views) |

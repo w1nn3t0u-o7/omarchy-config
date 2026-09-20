@@ -4,3 +4,4 @@ dotfiles/common/.pi/agent/extensions/browser/.profile
 dotfiles/common/.ssh/id_*
 dotfiles/common/.ssh/known_hosts*
 dotfiles/common/.pi/agent/skills/pdf-reader/.venv/
+**/__pycache__

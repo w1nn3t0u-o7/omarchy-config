@@ -5,9 +5,9 @@
   "defaultModel": "deepseek-flash",
   "defaultThinkingLevel": "low",
   "packages": [
-    "git:github.com/amosblomqvist/pi-observational-memory"
+    "git:github.com/amosblomqvist/pi-observational-memory",
     "git:github.com/amosblomqvist/pi-interactive-subagents"
-  ]
+  ],
   "observational-memory": {
     "chunkTokens": 5000,
     "chunkOverlapTokens": 0,
@@ -18,8 +18,8 @@
     "journeyTargetTokens": 1000,         // pushed JOURNEY.md size; compress oldest segments past this
     "observerConcurrency": 4,
     "models": {
-      "observer":     { "provider": "anthropic", "id": "claude-sonnet-4-6", "thinking": "low" },
-      "consolidator": { "provider": "anthropic", "id": "claude-sonnet-4-6", "thinking": "medium" }
+      "observer":     { "provider": "deepseek", "id": "deepseek-flash", "thinking": "low" },
+      "consolidator": { "provider": "deepseek", "id": "deepseek-flash", "thinking": "high" }
     },
     "passive": false,
     "debugLog": false
