@@ -39,3 +39,21 @@ else
   log_warn "Extensions directory for pi agent does not exist, skipping package installation."
 fi
 
+# pdf-reader skill setup
+PI_SKILLS_DIR="$HOME/.pi/agent/skills"
+if [[ -d "$PI_SKILLS_DIR" ]]; then
+  log_phase "Setting up pi skill Python venvs..."
+  for req in "$PI_SKILLS_DIR"/*/requirements.txt; do
+    [[ -f "$req" ]] || continue
+    skill_dir="$(dirname "$req")"
+    venv_dir="$skill_dir/.venv"
+    if [[ -f "$venv_dir/bin/python" ]]; then
+      log_ok "$(basename "$skill_dir"): venv already exists, skipping"
+    else
+      log_ok "$(basename "$skill_dir"): creating venv"
+      python3 -m venv "$venv_dir"
+      "$venv_dir/bin/pip" install --quiet -r "$req"
+    fi
+  done
+fi
+
