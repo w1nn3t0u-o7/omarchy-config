@@ -1,1 +1,8 @@
+# Local npm dependencies (managed by configs/common/agent.sh)
 dotfiles/common/.pi/agent/extensions/*/node_modules/
+
+# Runtime state / secrets that must never be committed
+dotfiles/common/.pi/agent/extensions/web-search/auth.json
+dotfiles/common/.pi/agent/extensions/browser/.profile
+dotfiles/common/.ssh/id_*
+dotfiles/common/.ssh/known_hosts*

@@ -24,7 +24,7 @@ stow_safe() {
     fi
   done
 
-  stow -d dotfiles -t "$HOME" -v -R "$pkg"
+  stow -d dotfiles -t "$HOME" --no-folding --ignore='node_modules' -v -R "$pkg"
 
   find "$HOME/.dotfiles-backup" -maxdepth 1 -type d -mtime +30 -exec rm -rf {} \; 2>/dev/null || true
 }
