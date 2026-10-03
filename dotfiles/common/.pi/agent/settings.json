@@ -11,11 +11,11 @@
   "observational-memory": {
     "chunkTokens": 5000,
     "chunkOverlapTokens": 0,
-    "poolTargetTokens": 10000,           // buffer drains back toward this after consolidation
-    "consolidateAtPoolTokens": 20000,    // pool size that triggers a consolidation (200% of target)
-    "compactAtContextTokens": 100000,    // tune per model
-    "tailTokens": 20000,                 // verbatim tail; snaps to a chunk boundary
-    "journeyTargetTokens": 1000,         // pushed JOURNEY.md size; compress oldest segments past this
+    "poolTargetTokens": 10000,
+    "consolidateAtPoolTokens": 20000,
+    "compactAtContextTokens": 100000,
+    "tailTokens": 20000,
+    "journeyTargetTokens": 1000,
     "observerConcurrency": 4,
     "models": {
       "observer":     { "provider": "deepseek", "id": "deepseek-flash", "thinking": "low" },
