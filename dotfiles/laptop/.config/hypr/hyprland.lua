@@ -29,6 +29,7 @@ require("default.hypr.toggles")
 o.window("com.mitchellh.ghostty", { workspace = "1" })
 o.window("firefox", { workspace = "2" })
 o.window("md.obsidian.Obsidian", { workspace = "3" })
+o.window("org.mozilla.Thunderbird", { workspace = "4" })
 o.window("discord", { workspace = "6" })
 o.window("Spotify", { workspace = "7" })
 
