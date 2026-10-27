@@ -25,7 +25,7 @@ CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/tmux-sessionizer/tmux-sessionizer
 # any of these.
 TS_SEARCH_PATHS=("$HOME/Projects")
 TS_MAX_DEPTH=1
-TS_WINDOWS=("nvim:nvim" "term:")
+TS_WINDOWS=("nvim:nvim ." "term:")
 
 if [[ -f "$CONFIG_FILE" ]]; then
   # shellcheck source=/dev/null

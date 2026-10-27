@@ -137,7 +137,7 @@ It opens an `fzf` picker of existing tmux sessions and project directories, then
 
 | Window | Command |
 | ------ | ------- |
-| `nvim` | `nvim` |
+| `nvim` | `nvim .` |
 | `pi` | `pi` |
 | `term` | scratch shell |
 | `lazygit` | `lazygit` |
@@ -147,6 +147,16 @@ Commands are launched inside each window's shell, so quitting an app leaves you 
 Tune the searched directories and the window list in [`dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf`](dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf).
 
 A project can override the default windows with a trusted, project-local `.tmux-sessionizer` shell file.
+
+### Session persistence
+
+`INSTALL.sh` installs TPM plus `tmux-resurrect` and `tmux-continuum` via `configs/common/tmux.sh`:
+
+- `prefix + Ctrl-s` saves manually; `prefix + Ctrl-r` restores.
+- Continuum auto-saves every 15 minutes and restores when the tmux server starts.
+- `nvim` is restored by default; `pi` is relaunched with `--continue`, and `lazygit` is relaunched. Neovim buffer state needs an nvim session plugin.
+- Pane contents and shell history are not captured by default.
+- To start the server before login, set `@continuum-boot 'on'` and run `loginctl enable-linger "$USER"`. This is not enabled by default.
 
 ## Credits
 
