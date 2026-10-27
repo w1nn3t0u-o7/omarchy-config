@@ -177,8 +177,9 @@ apply_project_overrides() {
 
 # Existing tmux sessions (except the current one) come first, then project dirs.
 # A directory whose session already exists is skipped so the same project does
-# not appear both as `[TMUX] name` and as a path. The current session's
-# directory is kept, since the current session itself is not listed.
+# not appear both as `[TMUX] name` and as a path. This includes the current
+# session's directory: if you are already in that session, there is nothing to
+# switch to.
 find_candidates() {
   local current="" name entry path depth candidate dir
   local -A session_names=()
@@ -208,18 +209,14 @@ find_candidates() {
     # :0 means "exactly this directory", without scanning its children.
     if (( depth == 0 )); then
       candidate=$(basename "$path" | tr '.: ' '___')
-      if [[ "$candidate" != "$current" && -n "${session_names[$candidate]:-}" ]]; then
-        continue
-      fi
+      [[ -n "${session_names[$candidate]:-}" ]] && continue
       printf '%s\n' "$path"
       continue
     fi
 
     while IFS= read -r dir; do
       candidate=$(basename "$dir" | tr '.: ' '___')
-      if [[ "$candidate" != "$current" && -n "${session_names[$candidate]:-}" ]]; then
-        continue
-      fi
+      [[ -n "${session_names[$candidate]:-}" ]] && continue
       printf '%s\n' "$dir"
     done < <(find "$path" -mindepth 1 -maxdepth "$depth" \
       \( -name .git -o -name node_modules -o -name .venv -o -name __pycache__ -o -name target \) -prune -o \
