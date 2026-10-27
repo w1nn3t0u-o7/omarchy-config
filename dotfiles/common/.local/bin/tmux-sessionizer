@@ -176,16 +176,24 @@ apply_project_overrides() {
 }
 
 # Existing tmux sessions (except the current one) come first, then project dirs.
+# A directory whose session already exists is skipped so the same project does
+# not appear both as `[TMUX] name` and as a path. The current session's
+# directory is kept, since the current session itself is not listed.
 find_candidates() {
+  local current="" name entry path depth candidate dir
+  local -A session_names=()
+
   if [[ -n ${TMUX:-} ]]; then
-    local current
     current=$(tmux display-message -p '#S')
-    tmux list-sessions -F '[TMUX] #{session_name}' 2>/dev/null | grep -vFx "[TMUX] $current"
-  else
-    tmux list-sessions -F '[TMUX] #{session_name}' 2>/dev/null
   fi
 
-  local entry path depth
+  while IFS= read -r name; do
+    [[ -n "$name" ]] || continue
+    session_names["$name"]=1
+    [[ "$name" == "$current" ]] && continue
+    printf '[TMUX] %s\n' "$name"
+  done < <(tmux list-sessions -F '#{session_name}' 2>/dev/null)
+
   for entry in "${TS_SEARCH_PATHS[@]}"; do
     depth="$TS_MAX_DEPTH"
     if [[ "$entry" =~ ^(.+):([0-9]+)$ ]]; then
@@ -199,13 +207,23 @@ find_candidates() {
 
     # :0 means "exactly this directory", without scanning its children.
     if (( depth == 0 )); then
+      candidate=$(basename "$path" | tr '.: ' '___')
+      if [[ "$candidate" != "$current" && -n "${session_names[$candidate]:-}" ]]; then
+        continue
+      fi
       printf '%s\n' "$path"
       continue
     fi
 
-    find "$path" -mindepth 1 -maxdepth "$depth" \
+    while IFS= read -r dir; do
+      candidate=$(basename "$dir" | tr '.: ' '___')
+      if [[ "$candidate" != "$current" && -n "${session_names[$candidate]:-}" ]]; then
+        continue
+      fi
+      printf '%s\n' "$dir"
+    done < <(find "$path" -mindepth 1 -maxdepth "$depth" \
       \( -name .git -o -name node_modules -o -name .venv -o -name __pycache__ -o -name target \) -prune -o \
-      -type d -print 2>/dev/null
+      -type d -print 2>/dev/null)
   done
 }
 
