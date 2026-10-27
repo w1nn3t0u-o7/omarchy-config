@@ -13,3 +13,7 @@ source "$OMARCHY_PATH/default/bash/rc"
 # Make an alias for invoking commands you use constantly
 # alias p='python'
 export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
+
+# tmux-sessionizer
+# Replaces readline's forward-char on Ctrl+F.
+bind -x '"\C-f": "$HOME/.local/bin/tmux-sessionizer"'

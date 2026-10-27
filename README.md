@@ -123,6 +123,29 @@ case "$(hostname)" in
 esac
 ```
 
+## Tmux Workflow
+
+`tmux-sessionizer` can be started from anywhere:
+
+| Where | Hotkey | Behavior |
+| ----- | ------ | -------- |
+| tmux | `Ctrl+F` | Raw root-table binding → popup. Fires from pi, lazygit, shells, nvim, etc. |
+| tmux | `prefix + f` (`Ctrl+Space`, then `f`) | Popup fallback from any pane/app |
+| bash prompt (outside tmux) | `Ctrl+F` | Runs the picker inline; creates and attaches to the session |
+
+It opens an `fzf` picker of existing tmux sessions and project directories, then creates (or switches to) a session with four windows, each started in the project root:
+
+| Window | Command |
+| ------ | ------- |
+| `nvim` | `nvim` |
+| `pi` | `pi` |
+| `term` | scratch shell |
+| `lazygit` | `lazygit` |
+
+Commands are launched inside each window's shell, so quitting an app leaves you in that window's shell. Re-running the sessionizer on an existing project only adds missing windows and focuses `nvim`.
+
+Tune the searched directories and the window layout in [`dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf`](dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf) (`TS_SEARCH_PATHS` and `TS_WINDOWS`).
+
 ## Credits
 
 The overall structure of this repo was inspired by [pomartel/omarchy-install-scripts](https://github.com/pomartel/omarchy-install-scripts), an excellent reference for automating Omarchy machine setup. Go check it out.
