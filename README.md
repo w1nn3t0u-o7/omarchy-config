@@ -133,7 +133,7 @@ esac
 | tmux | `prefix + f` (`Ctrl+Space`, then `f`) | Popup fallback from any pane/app |
 | bash prompt (outside tmux) | `Ctrl+F` | Runs the picker inline; creates and attaches to the session |
 
-It opens an `fzf` picker of existing tmux sessions and project directories, then creates (or switches to) a session with four windows, each started in the project root:
+It opens an `fzf` picker of existing tmux sessions and project directories, then creates (or switches to) a session with the default four windows, each started in the project root:
 
 | Window | Command |
 | ------ | ------- |
@@ -144,7 +144,9 @@ It opens an `fzf` picker of existing tmux sessions and project directories, then
 
 Commands are launched inside each window's shell, so quitting an app leaves you in that window's shell. Re-running the sessionizer on an existing project only adds missing windows and focuses `nvim`.
 
-Tune the searched directories and the window layout in [`dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf`](dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf) (`TS_SEARCH_PATHS` and `TS_WINDOWS`).
+Tune the searched directories and the window list in [`dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf`](dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf).
+
+A project can override the default windows with a trusted, project-local `.tmux-sessionizer` shell file.
 
 ## Credits
 

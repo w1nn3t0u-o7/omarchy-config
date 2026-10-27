@@ -7,31 +7,37 @@
 # Commands are typed into each window's shell, so quitting an app leaves you in
 # that window's shell instead of destroying the window.
 #
+# A project may contain a `.tmux-sessionizer` shell file that is sourced to
+# override TS_WINDOWS (only use this in projects you trust).
+#
 # Usage: tmux-sessionizer [OPTIONS] [DIRECTORY|SESSION]
 #
-# Configuration: ~/.config/tmux-sessionizer/tmux-sessionizer.conf
+# Configuration: ~/.config/tmux-sessionizer/tmux-sessionizer.conf (optional;
+# built-in defaults are used when it is missing).
 
 set -uo pipefail
 
-VERSION="0.2.0"
+VERSION="0.3.1"
 
 CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/tmux-sessionizer/tmux-sessionizer.conf"
 
-# Project directories to search. A ":N" suffix sets the find depth for that
-# path, otherwise TS_MAX_DEPTH is used.
-TS_SEARCH_PATHS=("$HOME/Projects:2")
+# Built-in defaults so the script can run standalone. A config file overrides
+# any of these.
+TS_SEARCH_PATHS=("$HOME/Projects")
 TS_MAX_DEPTH=1
-
-# Windows to create in every session, in order, as "name:command".
-# An empty command opens a scratch shell in the project directory.
-TS_WINDOWS=("nvim:nvim" "pi:pi" "term:" "lazygit:lazygit")
+TS_WINDOWS=("nvim:nvim" "term:")
 
 if [[ -f "$CONFIG_FILE" ]]; then
   # shellcheck source=/dev/null
   source "$CONFIG_FILE"
 fi
 
-(( ${#TS_WINDOWS[@]} > 0 )) || TS_WINDOWS=("shell:")
+[[ "$TS_MAX_DEPTH" =~ ^[0-9]+$ ]] || TS_MAX_DEPTH=1
+
+if (( ${#TS_WINDOWS[@]} == 0 )); then
+  echo "tmux-sessionizer: TS_WINDOWS is empty" >&2
+  exit 1
+fi
 
 usage() {
   cat <<EOF
@@ -145,6 +151,30 @@ ensure_layout() {
   tmux select-window -t "$session:$main" 2>/dev/null || true
 }
 
+# Source a project-local shell override. This is arbitrary code, so it is only
+# for trusted projects; it usually replaces or appends to TS_WINDOWS.
+apply_project_overrides() {
+  local dir="$1" file="$1/.tmux-sessionizer"
+  local -a global_windows
+
+  [[ -f "$file" ]] || return 0
+
+  global_windows=("${TS_WINDOWS[@]}")
+  TS_PROJECT_DIR="$dir"
+
+  # shellcheck source=/dev/null
+  if ! source "$file"; then
+    echo "tmux-sessionizer: failed to source $file; keeping the global layout" >&2
+    TS_WINDOWS=("${global_windows[@]}")
+    return 0
+  fi
+
+  if (( ${#TS_WINDOWS[@]} == 0 )); then
+    echo "tmux-sessionizer: $file left TS_WINDOWS empty; keeping the global layout" >&2
+    TS_WINDOWS=("${global_windows[@]}")
+  fi
+}
+
 # Existing tmux sessions (except the current one) come first, then project dirs.
 find_candidates() {
   if [[ -n ${TMUX:-} ]]; then
@@ -166,6 +196,12 @@ find_candidates() {
     fi
 
     [[ -d "$path" ]] || continue
+
+    # :0 means "exactly this directory", without scanning its children.
+    if (( depth == 0 )); then
+      printf '%s\n' "$path"
+      continue
+    fi
 
     find "$path" -mindepth 1 -maxdepth "$depth" \
       \( -name .git -o -name node_modules -o -name .venv -o -name __pycache__ -o -name target \) -prune -o \
@@ -200,6 +236,8 @@ fi
 
 selected_dir=$(cd "$selected" && pwd)
 session_name=$(basename "$selected_dir" | tr '.: ' '___')
+
+apply_project_overrides "$selected_dir"
 
 if has_session "$session_name"; then
   ensure_layout "$session_name" "$selected_dir"
