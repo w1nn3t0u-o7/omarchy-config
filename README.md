@@ -138,11 +138,13 @@ It opens an `fzf` picker of existing tmux sessions and project directories, then
 | Window | Command |
 | ------ | ------- |
 | `nvim` | `nvim .` |
-| `pi` | `pi` |
+| `pi` | `pi --continue` |
 | `term` | scratch shell |
 | `lazygit` | `lazygit` |
 
 Commands are launched inside each window's shell, so quitting an app leaves you in that window's shell. Re-running the sessionizer on an existing project only adds missing windows and focuses `nvim`.
+
+`pi` starts with `--continue`, so it resumes the latest conversation for the project (or starts a new one if there is none). Use `/new` inside pi for a fresh conversation.
 
 Tune the searched directories and the window list in [`dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf`](dotfiles/common/.config/tmux-sessionizer/tmux-sessionizer.conf).
 
